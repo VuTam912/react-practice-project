@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
+import ModalAddNew from './ModalAddNew';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -10,10 +11,24 @@ const TableUsers = (props) => {
 	const [totalUsers, setTotalUsers] = useState(0); // total users
 	const [totalPages, setTotalPages] = useState(0); // total phân trang (paginate)
 
+	// Modal
+	const [isShowModalAddNew, SetIsShowModalAddNew] = useState(false);
+
+	// close the modal
+	const handleClose = () => {
+		SetIsShowModalAddNew(false);
+	};
+
 	// when render component done, useEffect will execute
 	useEffect(() => {
 		getUsers(1); // 1 - page
 	}, []);
+
+	// cap nhap render table when click save in Modal => nhờ chuyền props qua Modal de call
+	const handleUpdateTable = (user) => {
+		// chen vi tri dau
+		setListUsers([user, ...listUsers]);
+	};
 
 	// Call Api should use async await
 	const getUsers = async (page) => {
@@ -21,7 +36,6 @@ const TableUsers = (props) => {
 
 		//Note: Để tránh API bị error => use if (..)
 		if (res && res.data && res.data) {
-			console.log(res);
 			setTotalUsers(res.total); // total of users
 			setListUsers(res.data); // store data ListUsers and it will re-render again
 			setTotalPages(res.total_pages); // total of pages
@@ -37,6 +51,17 @@ const TableUsers = (props) => {
 
 	return (
 		<>
+			<div className='my-3 add-new'>
+				<span>
+					<strong>List Users:</strong>
+				</span>
+				<button
+					className='btn btn-success'
+					onClick={() => SetIsShowModalAddNew(true)}
+				>
+					Add new user
+				</button>
+			</div>
 			<Table striped bordered hover>
 				<thead>
 					<tr>
@@ -61,6 +86,7 @@ const TableUsers = (props) => {
 						})}
 				</tbody>
 			</Table>
+			{/* Phân trang Page */}
 			<ReactPaginate
 				nextLabel='next >'
 				onPageChange={handlePageClick}
@@ -79,6 +105,11 @@ const TableUsers = (props) => {
 				breakLinkClassName='page-link'
 				containerClassName='pagination'
 				activeClassName='active'
+			/>
+			<ModalAddNew
+				show={isShowModalAddNew}
+				handleClose={handleClose}
+				handleUpdateTable={handleUpdateTable}
 			/>
 		</>
 	);

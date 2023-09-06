@@ -1,13 +1,29 @@
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import { postCreateUser } from '../services/UserService';
+import { toast } from 'react-toastify';
 
 const ModalAddNew = (props) => {
 	const { show, handleClose } = props;
 	const [name, setName] = useState('');
 	const [job, setJob] = useState('');
 
-	const handleSaveUser = () => {
-		console.log('>>check state: ', 'name = ', name, 'job = ', job);
+	const handleSaveUser = async () => {
+		let res = await postCreateUser(name, job); // API chỉ là fake nên ko sử dụng create dc
+		console.log('>>check state: ', res);
+		// create successful
+		if (res && res.id) {
+			//success
+			props.handleUpdateTable({ first_name: name, id: res.id });
+			handleClose();
+			setName('');
+			setJob('');
+			// Add Dialog successfully
+			toast.success('A user is create succeed!');
+		} else {
+			//error
+			toast.error('An error...');
+		}
 	};
 
 	return (
