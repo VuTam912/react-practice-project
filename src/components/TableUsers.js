@@ -31,7 +31,7 @@ const TableUsers = (props) => {
 	// handle Paginate (phân trang)
 	const handlePageClick = (event) => {
 		console.log(event);
-		// cap nhap chuyen trang
+		// cap nhap chuyen trang page
 		getUsers(event.selected + 1);
 	};
 
@@ -64,8 +64,8 @@ const TableUsers = (props) => {
 			<ReactPaginate
 				nextLabel='next >'
 				onPageChange={handlePageClick}
-				pageRangeDisplayed={3}
-				marginPagesDisplayed={2}
+				pageRangeDisplayed={5}
+				// marginPagesDisplayed={2}
 				pageCount={totalPages}
 				previousLabel='< previous'
 				pageClassName='page-item'

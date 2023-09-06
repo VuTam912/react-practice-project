@@ -15,3 +15,11 @@ code {
 Table thead tr {
   border-bottom: 2px solid black !important;
 }
+
+.app-container {
+  .add-new {
+    display        : flex;
+    align-items    : center;
+    justify-content: space-between;
+  }
+}
