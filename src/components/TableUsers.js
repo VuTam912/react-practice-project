@@ -17,20 +17,13 @@ const TableUsers = (props) => {
 		let res = await fetchAllUser();
 
 		//Note: Để tránh API bị error => use if (..)
-		if (res && res.data && res.data.data) {
-			setListUsers(res.data.data); // store data ListUsers and it will re-render again
+		if (res && res.data && res.data) {
+			setListUsers(res.data); // store data ListUsers and it will re-render again
 		}
 	};
 
-	console.log('check data: ', listUsers);
-
 	return (
 		<>
-			{/* avatar : "https://reqres.in/img/faces/1-image.jpg" email :
-			"george.bluth@reqres.in" 
-			first_name : "George" 
-			id : 1 
-			last_name : "Bluth" */}
 			<Table striped bordered hover>
 				<thead>
 					<tr>

@@ -1,6 +1,8 @@
-import axios from 'axios';
+// import axios from 'axios';
+import axios from './customize-axios';
+
 const fetchAllUser = () => {
-	return axios.get('https://reqres.in/api/users?page=1');
+	return axios.get('/api/users?page=1');
 };
 
 // return a object and not use default
