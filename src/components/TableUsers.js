@@ -2,24 +2,37 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '../services/UserService';
+import ReactPaginate from 'react-paginate';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
 	const [listUsers, setListUsers] = useState([]);
+	const [totalUsers, setTotalUsers] = useState(0); // total users
+	const [totalPages, setTotalPages] = useState(0); // total phân trang (paginate)
 
 	// when render component done, useEffect will execute
 	useEffect(() => {
-		getUsers();
+		getUsers(1); // 1 - page
 	}, []);
 
 	// Call Api should use async await
-	const getUsers = async () => {
-		let res = await fetchAllUser();
+	const getUsers = async (page) => {
+		let res = await fetchAllUser(page);
 
 		//Note: Để tránh API bị error => use if (..)
 		if (res && res.data && res.data) {
+			console.log(res);
+			setTotalUsers(res.total); // total of users
 			setListUsers(res.data); // store data ListUsers and it will re-render again
+			setTotalPages(res.total_pages); // total of pages
 		}
+	};
+
+	// handle Paginate (phân trang)
+	const handlePageClick = (event) => {
+		console.log(event);
+		// cap nhap chuyen trang
+		getUsers(event.selected + 1);
 	};
 
 	return (
@@ -48,6 +61,25 @@ const TableUsers = (props) => {
 						})}
 				</tbody>
 			</Table>
+			<ReactPaginate
+				nextLabel='next >'
+				onPageChange={handlePageClick}
+				pageRangeDisplayed={3}
+				marginPagesDisplayed={2}
+				pageCount={totalPages}
+				previousLabel='< previous'
+				pageClassName='page-item'
+				pageLinkClassName='page-link'
+				previousClassName='page-item'
+				previousLinkClassName='page-link'
+				nextClassName='page-item'
+				nextLinkClassName='page-link'
+				breakLabel='...'
+				breakClassName='page-item'
+				breakLinkClassName='page-link'
+				containerClassName='pagination'
+				activeClassName='active'
+			/>
 		</>
 	);
 };

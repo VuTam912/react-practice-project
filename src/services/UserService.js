@@ -1,8 +1,9 @@
 // import axios from 'axios';
 import axios from './customize-axios';
 
-const fetchAllUser = () => {
-	return axios.get('/api/users?page=1');
+// page là phân trang
+const fetchAllUser = (page) => {
+	return axios.get(`/api/users?page=${page}`);
 };
 
 // return a object and not use default
