@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModalAddNew from './ModalAddNew';
+import ModalEditUser from './ModalEditUser';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -13,10 +14,15 @@ const TableUsers = (props) => {
 
 	// Modal
 	const [isShowModalAddNew, SetIsShowModalAddNew] = useState(false);
+	const [isShowModalEdit, SetIsShowModalEdit] = useState(false);
+
+	// Data Edit - dataUserEdit se chuyen qua ModalEditUser
+	const [dataUserEdit, setDataUserEdit] = useState({});
 
 	// close the modal
 	const handleClose = () => {
 		SetIsShowModalAddNew(false);
+		SetIsShowModalEdit(false);
 	};
 
 	// when render component done, useEffect will execute
@@ -49,6 +55,12 @@ const TableUsers = (props) => {
 		getUsers(event.selected + 1);
 	};
 
+	// Edit user and show modal
+	const handleEditUser = (user) => {
+		setDataUserEdit(user);
+		SetIsShowModalEdit(true);
+	};
+
 	return (
 		<>
 			<div className='my-3 add-new'>
@@ -69,6 +81,7 @@ const TableUsers = (props) => {
 						<th>Email</th>
 						<th>First Name</th>
 						<th>Last Name</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -81,6 +94,15 @@ const TableUsers = (props) => {
 									<td>{item.email}</td>
 									<td>{item.first_name}</td>
 									<td>{item.last_name}</td>
+									<td>
+										<button
+											className='btn btn-warning mx-2'
+											onClick={() => handleEditUser(item)}
+										>
+											Edit
+										</button>
+										<button className='btn btn-danger'>Delete</button>
+									</td>
 								</tr>
 							);
 						})}
@@ -106,10 +128,16 @@ const TableUsers = (props) => {
 				containerClassName='pagination'
 				activeClassName='active'
 			/>
+			{/* Modal add,edit */}
 			<ModalAddNew
 				show={isShowModalAddNew}
 				handleClose={handleClose}
 				handleUpdateTable={handleUpdateTable}
+			/>
+			<ModalEditUser
+				show={isShowModalEdit}
+				dataUserEdit={dataUserEdit}
+				handleClose={handleClose}
 			/>
 		</>
 	);
