@@ -5,6 +5,7 @@ import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModalAddNew from './ModalAddNew';
 import ModalEditUser from './ModalEditUser';
+import ModalConfirm from './ModalConfirm';
 import _ from 'lodash';
 
 const TableUsers = (props) => {
@@ -16,14 +17,18 @@ const TableUsers = (props) => {
 	// Modal
 	const [isShowModalAddNew, SetIsShowModalAddNew] = useState(false);
 	const [isShowModalEdit, SetIsShowModalEdit] = useState(false);
+	const [isShowModalDelete, SetIsShowModalDelete] = useState(false);
 
 	// Data Edit - dataUserEdit se chuyen qua ModalEditUser
 	const [dataUserEdit, setDataUserEdit] = useState({});
+	// Data delete
+	const [dataUserDelete, setDataUserDelete] = useState({});
 
-	// close the modal
+	// close the all modals
 	const handleClose = () => {
 		SetIsShowModalAddNew(false);
 		SetIsShowModalEdit(false);
+		SetIsShowModalDelete(false);
 	};
 
 	// when render component done, useEffect will execute
@@ -47,6 +52,12 @@ const TableUsers = (props) => {
 
 		cloneListUser[index].first_name = user.first_name; // gan value moi vao index
 		setListUsers(cloneListUser);
+	};
+
+	// Delete user
+	const handleDeleteUser = (user) => {
+		SetIsShowModalDelete(true);
+		setDataUserDelete(user);
 	};
 
 	// Call Api should use async await
@@ -78,7 +89,7 @@ const TableUsers = (props) => {
 		<>
 			<div className='my-3 add-new'>
 				<span>
-					<strong>List Users:</strong>
+					<b>List Users:</b>
 				</span>
 				<button
 					className='btn btn-success'
@@ -114,7 +125,12 @@ const TableUsers = (props) => {
 										>
 											Edit
 										</button>
-										<button className='btn btn-danger'>Delete</button>
+										<button
+											className='btn btn-danger'
+											onClick={() => handleDeleteUser(item)}
+										>
+											Delete
+										</button>
 									</td>
 								</tr>
 							);
@@ -141,7 +157,7 @@ const TableUsers = (props) => {
 				containerClassName='pagination'
 				activeClassName='active'
 			/>
-			{/* Modal add,edit */}
+			{/* Modal: add,edit,del */}
 			<ModalAddNew
 				show={isShowModalAddNew}
 				handleClose={handleClose}
@@ -152,6 +168,12 @@ const TableUsers = (props) => {
 				dataUserEdit={dataUserEdit}
 				handleClose={handleClose}
 				handleEditUserFromModal={handleEditUserFromModal} // re-render the table when update,create...
+			/>
+			<ModalConfirm
+				show={isShowModalDelete}
+				handleClose={handleClose}
+				dataUserDelete={dataUserDelete}
+				handleDeleteUser={handleDeleteUser}
 			/>
 		</>
 	);
