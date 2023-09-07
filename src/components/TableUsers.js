@@ -10,6 +10,8 @@ import './TableUser.scss';
 import _ from 'lodash';
 import { debounce } from 'lodash';
 import { CSVLink, CSVDownload } from 'react-csv';
+import Papa from 'papaparse';
+import { toast } from 'react-toastify';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -158,6 +160,62 @@ const TableUsers = (props) => {
 		}
 	};
 
+	// Import CSV file
+	const handleImportCSV = (e) => {
+		if (e.target && e.target.files && e.target.files[0]) {
+			let file = e.target.files[0];
+
+			// if import wrong file csv file
+			if (file.type !== 'text/csv') {
+				toast.error('Only accept CSV files...');
+				return;
+			}
+			// console.log('>>> Check file upload: ', file);
+
+			// Execute Import CSV
+			// Parse local CSV file
+			Papa.parse(file, {
+				// header: true, // loai bo title fields of data
+				complete: function (results) {
+					let rawCSV = results.data;
+
+					if (rawCSV.length > 0) {
+						// check all fields of data - có 3 truờng
+						if (rawCSV[0] && rawCSV[0].length === 3) {
+							// fields of data
+							if (
+								rawCSV[0][0] !== 'Email' ||
+								rawCSV[0][1] !== 'First_name' ||
+								rawCSV[0][2] !== 'Last Name'
+							) {
+								toast.error('Wrong format Header CSV file');
+							} else {
+								let result = [];
+
+								rawCSV.map((item, index) => {
+									// loai bo row of field data va check row khong empty
+									if (index > 0 && item.length === 3) {
+										let obj = {};
+										obj.email = item[0];
+										obj.first_name = item[1];
+										obj.last_name = item[2];
+										result.push(obj);
+									}
+								});
+								setListUsers(result); // cap nhap trang thai ListUser de render
+								console.log('Check: ', result);
+							}
+						} else {
+							toast.error('Wrong format CSV file');
+						}
+					} else {
+						toast.error('Not found data on file!');
+					}
+				},
+			});
+		}
+	};
+
 	return (
 		<>
 			<div className='my-3 add-new'>
@@ -169,7 +227,12 @@ const TableUsers = (props) => {
 					<label htmlFor='test' className='btn btn-warning'>
 						<i className='fa-solid fa-file-import'></i> Import
 					</label>
-					<input id='test' type='file' hidden />
+					<input
+						id='test'
+						type='file'
+						hidden
+						onChange={(e) => handleImportCSV(e)}
+					/>
 					{/* export Excel - user */}
 					<CSVLink
 						data={dataExport}
