@@ -34,7 +34,10 @@ const TableUsers = (props) => {
 	// Search Email by keyword
 	const [keyword, setKeyword] = useState('');
 
-	// close the all modals
+	// data Export CSV
+	const [dataExport, setDataExport] = useState([]);
+
+	// close the all modals create,del,edit..
 	const handleClose = () => {
 		SetIsShowModalAddNew(false);
 		SetIsShowModalEdit(false);
@@ -134,12 +137,26 @@ const TableUsers = (props) => {
 		}
 	}, 500);
 
-	// const csvData = [
-	// 	['firstname', 'lastname', 'email'],
-	// 	['Ahmed', 'Tomi', 'ah@smthing.co.com'],
-	// 	['Raed', 'Labes', 'rl@smthing.co.com'],
-	// 	['Yezzi', 'Min l3b', 'ymin@cocococo.com'],
-	// ];
+	// Customize the fields (trường) to export - tuy chinh cac truong se export file CSV
+	// Note:(Not API)
+	const getUsersExport = (event, done) => {
+		let result = [];
+		if (listUsers && listUsers.length > 0) {
+			result.push(['Id', 'Email', 'First Name', 'Last Name']); // add title of fields
+			listUsers.map((item, index) => {
+				let arr = [];
+				arr[0] = item.id;
+				arr[1] = item.email;
+				arr[2] = item.first_name;
+				arr[3] = item.last_name;
+				result.push(arr);
+			});
+
+			// cap nhap status DataExport
+			setDataExport(result);
+			done(); // library react-csv aviliable
+		}
+	};
 
 	return (
 		<>
@@ -149,14 +166,15 @@ const TableUsers = (props) => {
 				</span>
 				<div className='group-btns'>
 					{/* File hidden */}
-
 					<label htmlFor='test' className='btn btn-warning'>
 						<i className='fa-solid fa-file-import'></i> Import
 					</label>
 					<input id='test' type='file' hidden />
 					{/* export Excel - user */}
 					<CSVLink
-						data={listUsers}
+						data={dataExport}
+						asyncOnClick={true}
+						onClick={getUsersExport}
 						filename={'user.csv'}
 						className='btn btn-primary'
 						target='_blank'
