@@ -9,6 +9,7 @@ import ModalConfirm from './ModalConfirm';
 import './TableUser.scss';
 import _ from 'lodash';
 import { debounce } from 'lodash';
+import { CSVLink, CSVDownload } from 'react-csv';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -133,18 +134,43 @@ const TableUsers = (props) => {
 		}
 	}, 500);
 
+	// const csvData = [
+	// 	['firstname', 'lastname', 'email'],
+	// 	['Ahmed', 'Tomi', 'ah@smthing.co.com'],
+	// 	['Raed', 'Labes', 'rl@smthing.co.com'],
+	// 	['Yezzi', 'Min l3b', 'ymin@cocococo.com'],
+	// ];
+
 	return (
 		<>
 			<div className='my-3 add-new'>
 				<span>
 					<b>List Users:</b>
 				</span>
-				<button
-					className='btn btn-success'
-					onClick={() => SetIsShowModalAddNew(true)}
-				>
-					Add new user
-				</button>
+				<div className='group-btns'>
+					{/* File hidden */}
+
+					<label htmlFor='test' className='btn btn-warning'>
+						<i className='fa-solid fa-file-import'></i> Import
+					</label>
+					<input id='test' type='file' hidden />
+					{/* export Excel - user */}
+					<CSVLink
+						data={listUsers}
+						filename={'user.csv'}
+						className='btn btn-primary'
+						target='_blank'
+					>
+						<i className='fa-solid fa-file-export'></i> Export
+					</CSVLink>
+
+					<button
+						className='btn btn-success'
+						onClick={() => SetIsShowModalAddNew(true)}
+					>
+						<i className='fa-solid fa-circle-plus '></i> Add new
+					</button>
+				</div>
 			</div>
 			<div className='col-4 my-3'>
 				<input
