@@ -31,7 +31,7 @@ const TableUsers = (props) => {
 		SetIsShowModalDelete(false);
 	};
 
-	// when render component done, useEffect will execute
+	// when render component done,then useEffect will execute
 	useEffect(() => {
 		getUsers(1); // 1 - page
 	}, []);
@@ -42,7 +42,7 @@ const TableUsers = (props) => {
 		setListUsers([user, ...listUsers]);
 	};
 
-	// Do la API fake nen phai update theo cách khác - nen khong dùng handlUpdateTable
+	// Do la API fake nen phai update theo cách khác - nen khong the re-render table
 	const handleEditUserFromModal = (user) => {
 		//find index to update user
 		let index = listUsers.findIndex((item) => item.id === user.id);
@@ -52,12 +52,6 @@ const TableUsers = (props) => {
 
 		cloneListUser[index].first_name = user.first_name; // gan value moi vao index
 		setListUsers(cloneListUser);
-	};
-
-	// Delete user
-	const handleDeleteUser = (user) => {
-		SetIsShowModalDelete(true);
-		setDataUserDelete(user);
 	};
 
 	// Call Api should use async await
@@ -85,6 +79,20 @@ const TableUsers = (props) => {
 		SetIsShowModalEdit(true);
 	};
 
+	// Delete user
+	const handleDeleteUser = (user) => {
+		SetIsShowModalDelete(true);
+		setDataUserDelete(user);
+	};
+
+	// After called APi done, then table be re-render component
+	const handleDeleteUserFormModal = (user) => {
+		let cloneListUsers = _.cloneDeep(listUsers); // clone or gan vao
+
+		cloneListUsers = cloneListUsers.filter((item) => item.id !== user.id); // filter id not equal user.id
+
+		setListUsers(cloneListUsers); // update listUsers
+	};
 	return (
 		<>
 			<div className='my-3 add-new'>
@@ -173,7 +181,7 @@ const TableUsers = (props) => {
 				show={isShowModalDelete}
 				handleClose={handleClose}
 				dataUserDelete={dataUserDelete}
-				handleDeleteUser={handleDeleteUser}
+				handleDeleteUserFormModal={handleDeleteUserFormModal}
 			/>
 		</>
 	);

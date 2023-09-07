@@ -1,6 +1,6 @@
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { postCreateUser, putUpdateUser } from '../services/UserService';
+import { putUpdateUser } from '../services/UserService';
 import { toast } from 'react-toastify';
 
 // EDIT USER
@@ -10,7 +10,7 @@ const ModalEditUser = (props) => {
 	const [name, setName] = useState('');
 	const [job, setJob] = useState('');
 
-	// Apply Update User by ID
+	// CAll api to Update User by ID
 	const handleEditUser = async () => {
 		let res = await putUpdateUser(name, job);
 
