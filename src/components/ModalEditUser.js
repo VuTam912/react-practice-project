@@ -1,16 +1,31 @@
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { postCreateUser } from '../services/UserService';
+import { postCreateUser, putUpdateUser } from '../services/UserService';
 import { toast } from 'react-toastify';
 
 // EDIT USER
 const ModalEditUser = (props) => {
-	const { show, handleClose, dataUserEdit } = props;
+	// tu dataUserEdit from Parent Component
+	const { show, handleClose, dataUserEdit, handleEditUserFromModal } = props;
 	const [name, setName] = useState('');
 	const [job, setJob] = useState('');
 
-	const handleEditUser = () => {
-		console.log('');
+	// Apply Update User by ID
+	const handleEditUser = async () => {
+		let res = await putUpdateUser(name, job);
+
+		// Update success
+		if (res && res.updatedAt) {
+			handleEditUserFromModal({ first_name: name, id: dataUserEdit.id });
+			handleClose();
+			setName('');
+			setJob('');
+			// Add Dialog successfully
+			toast.success('Update is create succeed!');
+		} else {
+			//error
+			toast.error('An error...');
+		}
 	};
 
 	// cap nhap gan gia tri edit o Effect

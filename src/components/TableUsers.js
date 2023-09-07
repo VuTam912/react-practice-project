@@ -5,6 +5,7 @@ import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModalAddNew from './ModalAddNew';
 import ModalEditUser from './ModalEditUser';
+import _ from 'lodash';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -34,6 +35,18 @@ const TableUsers = (props) => {
 	const handleUpdateTable = (user) => {
 		// chen vi tri dau
 		setListUsers([user, ...listUsers]);
+	};
+
+	// Do la API fake nen phai update theo cách khác - nen khong dùng handlUpdateTable
+	const handleEditUserFromModal = (user) => {
+		//find index to update user
+		let index = listUsers.findIndex((item) => item.id === user.id);
+		// Do không dùng MySQL nên phải tạo biến phụ để cập nhập được.
+		// let cloneListUser = [...listUsers]; // sao chep - method 1
+		let cloneListUser = _.cloneDeep(listUsers); // sao chep - method 2; Either way is fine.
+
+		cloneListUser[index].first_name = user.first_name; // gan value moi vao index
+		setListUsers(cloneListUser);
 	};
 
 	// Call Api should use async await
@@ -132,12 +145,13 @@ const TableUsers = (props) => {
 			<ModalAddNew
 				show={isShowModalAddNew}
 				handleClose={handleClose}
-				handleUpdateTable={handleUpdateTable}
+				handleUpdateTable={handleUpdateTable} // re-render the table when update,create...
 			/>
 			<ModalEditUser
 				show={isShowModalEdit}
 				dataUserEdit={dataUserEdit}
 				handleClose={handleClose}
+				handleEditUserFromModal={handleEditUserFromModal} // re-render the table when update,create...
 			/>
 		</>
 	);
