@@ -8,6 +8,7 @@ import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import './TableUser.scss';
 import _ from 'lodash';
+import { debounce } from 'lodash';
 
 const TableUsers = (props) => {
 	//store data ListUsers from api
@@ -28,6 +29,9 @@ const TableUsers = (props) => {
 	// SortBy - Sắp xếp ở các trường.
 	const [sortBy, setSortBy] = useState('asc'); // tang dan | desc = giam dam
 	const [sortField, setSortField] = useState('id');
+
+	// Search Email by keyword
+	const [keyword, setKeyword] = useState('');
 
 	// close the all modals
 	const handleClose = () => {
@@ -110,6 +114,25 @@ const TableUsers = (props) => {
 		console.log(cloneListUsers);
 	};
 
+	// search by keyword (onChange) - use debounce of lodash and set delay 0.5
+	// debounce => de toi uu hieu suat khi nhieu user call api de search
+	const handleSearch = debounce((e) => {
+		let term = e.target.value;
+		console.log(term);
+		if (term) {
+			// clone listUsers (giải pháp tạm khi không có backend)
+			let cloneListUsers = _.cloneDeep(listUsers);
+			// filter and search by keyword (term)
+			cloneListUsers = cloneListUsers.filter((item) =>
+				item.email.includes(term)
+			);
+			// re-render |Note: Chi tra ket qua search co 1 lan - ko hieu qua khi search nhieu
+			setListUsers(cloneListUsers);
+		} else {
+			getUsers(1); // 1 - page
+		}
+	}, 500);
+
 	return (
 		<>
 			<div className='my-3 add-new'>
@@ -122,6 +145,14 @@ const TableUsers = (props) => {
 				>
 					Add new user
 				</button>
+			</div>
+			<div className='col-4 my-3'>
+				<input
+					className='form-control'
+					placeholder='Search user by email...'
+					// value={keyword}
+					onChange={(e) => handleSearch(e)}
+				/>
 			</div>
 			<Table striped bordered hover>
 				<thead>
