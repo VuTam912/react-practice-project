@@ -21,9 +21,13 @@ const putUpdateUser = (name, job) => {
 
 // DEL - DELETE - delete
 const deleteUser = (id) => {
-	console.log(id);
 	return axios.delete(`/api/users/${id}`);
 };
 
+// Login API
+const loginApi = (email, password) => {
+	return axios.post(`/api/login`, { email, password });
+};
+
 // return all object and not use default
-export { fetchAllUser, postCreateUser, putUpdateUser, deleteUser };
+export { fetchAllUser, postCreateUser, putUpdateUser, deleteUser, loginApi };

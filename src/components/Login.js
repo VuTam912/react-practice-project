@@ -1,10 +1,25 @@
 import { useState } from 'react';
+import { loginApi } from '../services/UserService';
+import { toast } from 'react-toastify';
 
 const Login = () => {
-	const [emial, setEmail] = useState('');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	// hide/show Passwrod when onClick on icon
 	const [isShowPassword, setIsShowPassword] = useState(false);
+
+	// handle login
+	const handleLogin = async () => {
+		if (!email || !password) {
+			toast.error('Email and Password are required');
+			return;
+		}
+		// API fake - pass: 'eve.holt@reqres.in'
+		let res = await loginApi(email, password);
+		if (res && res.token) {
+			localStorage.setItem('token', res.token);
+		}
+	};
 
 	return (
 		<>
@@ -15,7 +30,7 @@ const Login = () => {
 				<input
 					type='text'
 					placeholder='Emali or Username...'
-					value={emial}
+					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
 				<div className='input-2'>
@@ -34,7 +49,11 @@ const Login = () => {
 					></i>
 				</div>
 				{/* when enter user and pass input. Then active button */}
-				<button className={emial && password ? 'active' : ''} disabled={true}>
+				<button
+					className={email && password ? 'active' : ''}
+					disabled={email && password ? false : true}
+					onClick={() => handleLogin()}
+				>
 					Login
 				</button>
 				<div className='back'>
