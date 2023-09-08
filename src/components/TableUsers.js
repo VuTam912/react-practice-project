@@ -160,7 +160,8 @@ const TableUsers = (props) => {
 		}
 	};
 
-	// Import CSV file
+	// Import CSV file - trong file excel muốn import thì nên xóa trường id.
+	// To import a CSV file. then should delete the ID Field in file CSV.
 	const handleImportCSV = (e) => {
 		if (e.target && e.target.files && e.target.files[0]) {
 			let file = e.target.files[0];
@@ -173,7 +174,6 @@ const TableUsers = (props) => {
 			// console.log('>>> Check file upload: ', file);
 
 			// Execute Import CSV
-			// Parse local CSV file
 			Papa.parse(file, {
 				// header: true, // loai bo title fields of data
 				complete: function (results) {
@@ -190,6 +190,7 @@ const TableUsers = (props) => {
 							) {
 								toast.error('Wrong format Header CSV file');
 							} else {
+								// if there are fields of data
 								let result = [];
 
 								rawCSV.map((item, index) => {

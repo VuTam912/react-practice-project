@@ -2,20 +2,26 @@ import { Container, Row } from 'react-bootstrap';
 import './App.scss';
 import Header from './components/Header';
 import TableUsers from './components/TableUsers';
-
-import { useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import Home from './components/Home';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
 	return (
 		<>
 			<div className='app-container'>
-				<Header />
 				<Container>
-					<TableUsers />
+					<Header />
+					{/* React-router ver 6. */}
+					<Routes>
+						<Route path='/' element={<Home />} />
+						<Route path='/users' element={<TableUsers />} />
+					</Routes>
 				</Container>
 			</div>
+
+			{/* - Toast - */}
 			<ToastContainer
 				position='top-right'
 				autoClose={5000}
