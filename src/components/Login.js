@@ -57,6 +57,13 @@ const Login = () => {
 		navigate('/');
 	};
 
+	// thay vi click on Login thi nen nhan enter o input pass la login
+	const HandlePressEnter = (e) => {
+		if (e && e.key === 'Enter') {
+			handleLogin();
+		}
+	};
+
 	return (
 		<>
 			{/* Search Google: Breakpoint boostrap: col-sm : =>576px */}
@@ -67,7 +74,7 @@ const Login = () => {
 					type='text'
 					placeholder='Emali or Username...'
 					value={email}
-					onChange={(e) => setEmail(e.target.value)}
+					onChange={(e) => setEmail(e.target.value.trim())}
 				/>
 				<div className='input-2'>
 					<input
@@ -75,6 +82,7 @@ const Login = () => {
 						placeholder='Password...'
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						onKeyDown={(e) => HandlePressEnter(e)}
 					/>
 					{/* hide/show Passwrd */}
 					<i

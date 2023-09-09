@@ -19,6 +19,7 @@ const PrivateRoutes = (props) => {
 			</>
 		);
 	}
+
 	//  nếu đã login thì chuyển tới tableUser = component là children
 	return <>{props.children}</>;
 };

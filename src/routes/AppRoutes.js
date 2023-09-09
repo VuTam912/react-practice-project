@@ -5,7 +5,9 @@ import PrivateRoutes from './PrivateRoutes';
 import TableUsers from '../components/TableUsers';
 import { UserContext } from './../context/UserContext';
 import { useContext } from 'react';
+import NotFound from './NotFound';
 
+// Quan ly dieu huong/Route URL
 /* React-router ver 6. */
 
 const AppRoutes = () => {
@@ -17,6 +19,7 @@ const AppRoutes = () => {
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route path='/login' element={<Login />} />
+				{/* Yêu cầu login để vào url: Users */}
 				<Route
 					path='/users'
 					element={
@@ -26,6 +29,7 @@ const AppRoutes = () => {
 						</PrivateRoutes>
 					}
 				/>
+				<Route path='*' element={<NotFound />} />
 			</Routes>
 		</>
 	);
