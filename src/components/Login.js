@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { loginApi } from '../services/UserService';
 import { toast } from 'react-toastify';
 // react-router v6
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './../context/UserContext';
 
 const Login = () => {
 	// chuyen sang trang khi login thanh
@@ -14,6 +15,8 @@ const Login = () => {
 	const [isShowPassword, setIsShowPassword] = useState(false);
 	// loading icon button
 	const [loadingAPI, setLoadingApi] = useState(false);
+
+	const { loginContext } = useContext(UserContext);
 
 	useEffect(() => {
 		// neu da login roi thi auto chuyen trang home ma ko can phai login lan nuwa
@@ -36,8 +39,8 @@ const Login = () => {
 		let res = await loginApi(email, password);
 
 		if (res && res.token) {
-			localStorage.setItem('token', res.token);
 			// move to Home page when login successful
+			loginContext(email, res.token);
 			navigate('/');
 		} else {
 			//error
@@ -50,12 +53,16 @@ const Login = () => {
 		setLoadingApi(false);
 	};
 
+	const handleBack = () => {
+		navigate('/');
+	};
+
 	return (
 		<>
 			{/* Search Google: Breakpoint boostrap: col-sm : =>576px */}
 			<div className='login-container col-12 col-sm-4'>
 				<div className='title'>Log in</div>
-				<div className='text'>Email or Username</div>
+				<div className='text'>Email or Username (eve.holt@reqres.in)</div>
 				<input
 					type='text'
 					placeholder='Emali or Username...'
@@ -86,7 +93,10 @@ const Login = () => {
 					{loadingAPI && <i className='fa-solid fa-sync fa-spin'></i>} Login
 				</button>
 				<div className='back'>
-					<i className='fa-solid fa-angles-left'></i> Go Back
+					<i className='fa-solid fa-angles-left'></i>{' '}
+					<span style={{ cursor: 'pointer' }} onClick={() => handleBack()}>
+						Go Back
+					</span>
 				</div>
 			</div>
 		</>

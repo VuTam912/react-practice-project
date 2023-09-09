@@ -5,13 +5,16 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter } from 'react-router-dom';
+import { UserProvider } from './context/UserContext';
 
 // React Ver 17.0.2
 ReactDOM.render(
 	<React.StrictMode>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+		<UserProvider>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</UserProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );
