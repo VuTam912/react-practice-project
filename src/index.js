@@ -6,16 +6,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
+// redux
+import store from './redux/store';
+import { Provider } from 'react-redux';
 
 // React Ver 17.0.2
 ReactDOM.render(
-	<React.StrictMode>
-		<UserProvider>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</UserProvider>
-	</React.StrictMode>,
+	<Provider store={store}>
+		<React.StrictMode>
+			<UserProvider>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</UserProvider>
+		</React.StrictMode>
+	</Provider>,
 	document.getElementById('root')
 );
 // If you want to start measuring performance in your app, pass a function

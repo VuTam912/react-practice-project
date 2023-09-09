@@ -6,11 +6,16 @@ import { ToastContainer } from 'react-toastify';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from './context/UserContext';
 import AppRoutes from './routes/AppRoutes';
+import { useSelector } from 'react-redux';
 
 function App() {
 	const { user, loginContext } = useContext(UserContext);
 
-	console.log('>>> State User: ', user);
+	const dataUserRedux = useSelector((state) => state.user.account);
+
+	console.log('>>check redux: ', dataUserRedux);
+
+	// console.log('>>> State User: ', user);
 
 	useEffect(() => {
 		if (localStorage.getItem('token')) {
