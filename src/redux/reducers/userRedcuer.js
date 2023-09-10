@@ -3,7 +3,7 @@ import * as type from '../actions/userAction';
 const INITIAL_STATE = {
 	account: {
 		email: '',
-		auth: null, // fix bug to toast be not displayed
+		auth: null, // fix bug to toast is not displayed
 		token: '',
 	},
 	// to show Loading (button) or not

@@ -8,13 +8,16 @@ import { BrowserRouter } from 'react-router-dom';
 // redux
 import store from './redux/store';
 import { Provider } from 'react-redux';
-
+// handle Error
+import ErrorBoundary from './components/ErrorBoundary/Error';
 // React Ver 17.0.2
 ReactDOM.render(
 	<Provider store={store}>
 		<React.StrictMode>
 			<BrowserRouter>
-				<App />
+				<ErrorBoundary>
+					<App />
+				</ErrorBoundary>
 			</BrowserRouter>
 		</React.StrictMode>
 	</Provider>,
