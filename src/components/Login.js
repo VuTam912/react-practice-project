@@ -1,30 +1,25 @@
 import { useEffect, useState, useContext } from 'react';
-import { loginApi } from '../services/UserService';
 import { toast } from 'react-toastify';
 // react-router v6
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './../context/UserContext';
+import { handleLoginRedux } from '../redux/actions/userAction';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
 	// chuyen sang trang khi login thanh
 	const navigate = useNavigate();
+	// send action reducer to execute
+	const dispatch = useDispatch();
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	// hide/show Passwrod when onClick on icon
 	const [isShowPassword, setIsShowPassword] = useState(false);
-	// loading icon button
-	const [loadingAPI, setLoadingApi] = useState(false);
 
-	const { loginContext } = useContext(UserContext);
-
-	useEffect(() => {
-		// neu da login roi thi auto chuyen trang home ma ko can phai login lan nuwa
-		let token = localStorage.getItem('token');
-		if (token) {
-			navigate('/');
-		}
-	}, []);
+	// get state (loading icon for button) from redux
+	const isLoading = useSelector((state) => state.user.isLoading);
+	const account = useSelector((state) => state.user.account);
 
 	// handle login
 	const handleLogin = async () => {
@@ -32,25 +27,9 @@ const Login = () => {
 			toast.error('Email and Password are required');
 			return;
 		}
-		// active Loading icon
-		setLoadingApi(true);
 
-		// API fake - pass: 'eve.holt@reqres.in'
-		let res = await loginApi(email, password);
-
-		if (res && res.token) {
-			// move to Home page when login successful
-			loginContext(email, res.token);
-			navigate('/');
-		} else {
-			//error
-			if (res && res.status === 400) {
-				toast.error(res.data.error);
-			}
-		}
-
-		// when login was done
-		setLoadingApi(false);
+		// use redux
+		dispatch(handleLoginRedux(email, password));
 	};
 
 	const handleBack = () => {
@@ -64,6 +43,12 @@ const Login = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (account && account.auth === true) {
+			navigate('/');
+		}
+	}, [account]); // neu account nhan duoc su thay doi
+
 	return (
 		<>
 			{/* Search Google: Breakpoint boostrap: col-sm : =>576px */}
@@ -74,7 +59,7 @@ const Login = () => {
 					type='text'
 					placeholder='Emali or Username...'
 					value={email}
-					onChange={(e) => setEmail(e.target.value.trim())}
+					onChange={(e) => setEmail(e.target.value)}
 				/>
 				<div className='input-2'>
 					<input
@@ -98,7 +83,7 @@ const Login = () => {
 					disabled={email && password ? false : true}
 					onClick={() => handleLogin()}
 				>
-					{loadingAPI && <i className='fa-solid fa-sync fa-spin'></i>} Login
+					{isLoading && <i className='fa-solid fa-sync fa-spin'></i>} Login
 				</button>
 				<div className='back'>
 					<i className='fa-solid fa-angles-left'></i>{' '}

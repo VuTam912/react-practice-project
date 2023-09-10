@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-import { useContext } from 'react';
-import { Alert } from 'react-bootstrap';
 
-// Private danh cho khi nguoi dung dang nhap thanh cong thi TableUser se hien tren menu
+import { Alert } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+
+// Private danh cho khi nguoi dung dang nhap thanh cong thi TableUser se hien thi con khong thi alert
 
 const PrivateRoutes = (props) => {
-	const { user } = useContext(UserContext);
+	const user = useSelector((state) => state.user.account);
 
 	// if the user has not yet logged in (đăng nhập)
 	if (user && !user.auth) {

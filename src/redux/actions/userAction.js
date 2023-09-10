@@ -1,2 +1,56 @@
-export const USER_LOGIN = 'USER_LOGIN';
+import { toast } from 'react-toastify';
+import { loginApi } from '../../services/UserService';
+
+// dispatch action to reducer
+
+export const FETCH_USER_LOGIN = 'FETCH_USER_LOGIN';
+export const FETCH_USER_ERROR = 'FETCH_USER_ERROR';
+export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
+
 export const USER_LOGOUT = 'USER_LOGOUT';
+export const USER_REFRESH = 'USER_REFRESH';
+
+//  Handle Login
+export const handleLoginRedux = (email, password) => {
+	return async (dispatch, getState) => {
+		dispatch({ type: FETCH_USER_LOGIN });
+
+		// API fake - pass: 'eve.holt@reqres.in'
+		let res = await loginApi(email.trim(), password);
+
+		if (res && res.token) {
+			localStorage.setItem('token', res.token);
+			localStorage.setItem('email', email.trim());
+			dispatch({
+				type: FETCH_USER_SUCCESS,
+				data: { email: email.trim(), token: res.token },
+			});
+		} else {
+			//error
+			if (res && res.status === 400) {
+				toast.error(res.data.error);
+			}
+			dispatch({
+				type: FETCH_USER_ERROR,
+			});
+		}
+	};
+};
+
+// Handle Logout
+export const handleLogoutRedux = () => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: USER_LOGOUT,
+		});
+	};
+};
+
+// handle Refresh (f5) -> fix show toast.success and auto logout when press F5 or Refresh
+export const handleRefresh = () => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: USER_REFRESH,
+		});
+	};
+};

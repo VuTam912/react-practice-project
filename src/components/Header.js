@@ -6,30 +6,33 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import logo from './../assets/images/logo.svg';
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useContext, useEffect, useState } from 'react';
-import { UserContext } from './../context/UserContext';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleLogoutRedux } from '../redux/actions/userAction';
 
 const Header = (props) => {
-	// init
-	const { logout, user } = useContext(UserContext);
-
-	const [hideHeader, setHideHeader] = useState(false);
-
-	// // when render component done, then useEffect will be execute
-	// useEffect(() => {
-	// 	if (window.location.pathname === '/login') {
-	// 		setHideHeader(true);
-	// 	}
-	// }, []);
-
 	// chuyen huong trang - react-router v6
 	const navigate = useNavigate();
 
+	// send action to reducer
+	const dispatch = useDispatch();
+
+	// get state from redux
+	const user = useSelector((state) => state.user.account);
+
 	const handleLogout = () => {
-		logout();
-		navigate('/');
-		toast.success('Logout successfully');
+		dispatch(handleLogoutRedux());
 	};
+
+	// when render done then useEffect will be called :
+	// check user if logged out or logged in (was code handleRefresh)
+	useEffect(() => {
+		// if user.auth = null then will not run.
+		if (user && user.auth === false) {
+			navigate('/');
+			toast.success('Log out success!');
+		}
+	}, [user]);
 
 	return (
 		<>
